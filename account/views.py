@@ -52,3 +52,7 @@ class LoginView(TokenObtainPairView):
 
 class RefreshView(TokenRefreshView):
     permission_classes = (AllowAny,)
+
+
+a = 2
+print(a)
