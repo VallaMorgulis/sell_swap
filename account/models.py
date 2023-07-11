@@ -3,8 +3,14 @@ from uuid import uuid4
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.dispatch import receiver
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.core.mail import send_mail
+
 from .managers import UserManager
 
+HOST = 'localhost:8000'
 
 class CustomUser(AbstractUser):
     email = models.EmailField('email address', unique=True)
@@ -36,3 +42,21 @@ class CustomUser(AbstractUser):
         self.activation_code = code
 
 
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+    email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'),
+                                                   reset_password_token.key)
+    link = f'http://{HOST}{email_plaintext_message}'
+
+    send_mail(
+        # title:
+        "Password Reset for {title}".format(title="Some website title"),
+        # message:
+        'Здравствуйте, восстановите ваш пароль!',
+        f'Чтобы восстановить ваш пароль нужно перейти по ссылке ниже:'
+        f'\n{link}',
+        # from:
+        "noreply@somehost.local",
+        # to:
+        [reset_password_token.user.email]
+    )

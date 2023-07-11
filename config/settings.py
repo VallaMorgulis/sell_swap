@@ -28,7 +28,6 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOST').split(' ')
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +45,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'ckeditor',
+    'django_rest_passwordreset',
 
     # myApps
     'account',
@@ -219,8 +219,9 @@ SIMPLE_JWT = {
 #     }
 # }
 
-REDIS_HOST = 'redis'
+REDIS_HOST = '127.0.0.1'
 REDIS_PORT = '6379'
+# 'redis'
 
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}

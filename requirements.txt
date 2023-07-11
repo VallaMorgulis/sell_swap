@@ -46,3 +46,5 @@ urllib3==2.0.3
 vine==5.0.0
 wcwidth==0.2.6
 django-redis
+django-rest-passwordreset
+python-json-logger
