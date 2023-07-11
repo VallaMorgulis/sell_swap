@@ -46,10 +46,11 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'ckeditor',
+    'corsheaders',
 
     # myApps
     'account',
-    # 'category',
+    'category',
     # 'order',
     # 'product',
     # 'rating',
