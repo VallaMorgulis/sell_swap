@@ -20,7 +20,7 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_DB: shop_db
+      POSTGRES_DB: sellswap_db
       POSTGRES_USER: kochemarov
       POSTGRES_PASSWORD: 1
     volumes:
