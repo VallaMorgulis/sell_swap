@@ -12,6 +12,11 @@ class Category(models.Model):
     def __str__(self):
         return f'{self.parent} -> {self.name}' if self.parent else f'{self.name}'
 
+    # def get_children(self):
+    #     if self.parent:
+    #         return self.children.all()
+    #     return False
+
 
 class Meta:
     verbose_name = 'category'
