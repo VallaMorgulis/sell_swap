@@ -48,3 +48,4 @@ wcwidth==0.2.6
 django-redis
 django-rest-passwordreset
 python-json-logger
+django-cors-headers

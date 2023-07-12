@@ -5,12 +5,12 @@ from rest_framework.pagination import PageNumberPagination
 
 from . import serializers
 from .models import Product, ProductImage
-from .permissions import IsAuthorOrAdmin
+from .permissions import IsAuthorOrAdmin, IsAuthor
 from .serializers import ProductSerializer
 
 
 class StandartResultPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 12
     page_query_param = 'page'
 
 
@@ -40,11 +40,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         return serializers.ProductSerializer
 
     def get_permissions(self):
-        if self.action in ('retrieve', 'list'):
-            return [permissions.AllowAny(), ]
-        elif self.action == 'destroy':
-            return [permissions.IsAdminUser(), ]
-        return [IsAuthorOrAdmin(), ]
+        if self.action == 'retrieve' or self.action == 'list':
+            return [IsAuthor(), ]
+        return [permissions.IsAdminUser(), ]
 
     # api/v1/products/<id>/reviews/
     # @action(['GET', 'POST'], detail=True)
