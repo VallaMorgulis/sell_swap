@@ -49,7 +49,7 @@ INSTALLED_APPS = [
 
     # myApps
     'account',
-    # 'category',
+    'category',
     # 'order',
     # 'product',
     # 'rating',

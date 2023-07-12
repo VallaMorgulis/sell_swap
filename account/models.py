@@ -12,6 +12,7 @@ from .managers import UserManager
 
 HOST = 'localhost:8000'
 
+
 class CustomUser(AbstractUser):
     email = models.EmailField('email address', unique=True)
     password = models.CharField(max_length=255)
@@ -52,11 +53,10 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         # title:
         "Password Reset for {title}".format(title="Some website title"),
         # message:
-        'Здравствуйте, восстановите ваш пароль!',
-        f'Чтобы восстановить ваш пароль нужно перейти по ссылке ниже:'
+        f'Здравствуйте, восстановите ваш пароль!\nЧтобы восстановить ваш пароль нужно перейти по ссылке ниже:\n'
         f'\n{link}',
         # from:
         "noreply@somehost.local",
         # to:
-        [reset_password_token.user.email]
+        [reset_password_token.user.email],
     )
