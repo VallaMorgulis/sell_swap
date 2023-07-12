@@ -10,7 +10,12 @@ class Category(models.Model):
     parent = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='children', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.name} -> {self.parent}' if self.parent else f'{self.name}'
+        return f'{self.parent} -> {self.name}' if self.parent else f'{self.name}'
+
+    # def get_children(self):
+    #     if self.parent:
+    #         return self.children.all()
+    #     return False
 
 
 class Meta:
@@ -32,4 +37,6 @@ def category_slug_save(sender, instance, *args, **kwargs):
 
         instance.slug = django_slugify(''.join(alphabet.get(w, w) for w in instance.name.lower()))
 
+
         # instance.slug = slugify(instance.name)
+
