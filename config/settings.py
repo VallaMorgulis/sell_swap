@@ -46,16 +46,19 @@ INSTALLED_APPS = [
     'django_filters',
     'ckeditor',
     'django_rest_passwordreset',
+    'corsheaders',
 
     # myApps
     'account',
     'category',
-    # 'order',
+    'order',
     'product',
     # 'rating',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -66,6 +69,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Укажите адрес вашего клиентского приложения JavaScript
+]
 
 TEMPLATES = [
     {
