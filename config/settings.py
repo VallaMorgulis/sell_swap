@@ -16,7 +16,6 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = config('SECRET')
 DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOST').split(' ')
-
 
 # Application definition
 
@@ -57,6 +55,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,6 +67,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000'
+]
 
 TEMPLATES = [
     {
@@ -86,7 +90,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -100,7 +103,6 @@ DATABASES = {
         'PORT': config('DB_PORT', cast=int),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -120,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -131,7 +132,6 @@ TIME_ZONE = 'Asia/Bishkek'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -235,25 +235,20 @@ CELERY_RESULT_SERIALIZER = 'json'
 # redis-server
 # celery -A config worker -l INFO - запуск Celery
 
-   #  1  git clone https://<репозиторий>
-   #  2  cd <dir project>
-   #  3  nano .env
-   #  4  sudo apt-get update
-   #  5  sudo apt install docker.io
-   #  6  sudo apt install docker-compose
-   #  7  sudo service docker start
-   #  8  sudo docker-compose up -d --build
-   #  9  sudo docker-compose start
-   # 10  sudo docker-compose up -d
-   # 11  sudo docker-compose exec web bash
-   # После 11 команды попадаем в контейнер Docker
-   # 12 python3 manage.py collectstatic
-   # 13 python3 manage.py createsuperuser
-
-
-
+#  1  git clone https://<репозиторий>
+#  2  cd <dir project>
+#  3  nano .env
+#  4  sudo apt-get update
+#  5  sudo apt install docker.io
+#  6  sudo apt install docker-compose
+#  7  sudo service docker start
+#  8  sudo docker-compose up -d --build
+#  9  sudo docker-compose start
+# 10  sudo docker-compose up -d
+# 11  sudo docker-compose exec web bash
+# После 11 команды попадаем в контейнер Docker
+# 12 python3 manage.py collectstatic
+# 13 python3 manage.py createsuperuser
 
 # sudo docker-compose up -d --build
 # sudo docker-compose exec web bash
-
-
