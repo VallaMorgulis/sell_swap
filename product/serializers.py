@@ -1,3 +1,4 @@
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from .models import Product, ProductImage
@@ -11,6 +12,11 @@ class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('id', 'owner', 'owner_email', 'category_name', 'title', 'price', 'preview')
+
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        repr['rating'] = instance.reviews.aggregate(Avg('rating'))['rating__avg']
+        return repr
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -28,8 +34,24 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = (
             'id', 'owner', 'owner_email', 'title', 'description', 'category',
-            'price', 'quantity', 'created_at', 'updated_at', 'preview', 'images'
+            'price', 'quantity', 'created_at', 'updated_at', 'preview', 'images',
         )
+
+    @staticmethod
+    def get_stars(instance):
+        stars = {
+            '5': instance.reviews.filter(rating=5).count(), '4': instance.reviews.filter(rating=4).count(),
+            '3': instance.reviews.filter(rating=3).count(), '2': instance.reviews.filter(rating=2).count(),
+            '1': instance.reviews.filter(rating=1).count()}
+        return stars
+
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        repr['rating'] = instance.reviews.aggregate(Avg('rating'))
+        rating = repr['rating']
+        rating['ratings_count'] = instance.reviews.count()
+        repr['stars'] = self.get_stars(instance)
+        return repr
 
     def create(self, validated_data):
         request = self.context.get('request')

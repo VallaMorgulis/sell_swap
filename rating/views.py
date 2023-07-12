@@ -5,7 +5,7 @@ from .models import Review
 from .serializers import ReviewSerializer
 
 
-class ReviewViewSet(ModelViewSet):
+class RatingViewSet(ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
@@ -16,3 +16,4 @@ class ReviewViewSet(ModelViewSet):
         if self.action in ('update', 'partial_update', 'destroy'):
             return [permissions.IsAdminUser(), ]
         return [permissions.IsAuthenticatedOrReadOnly(), ]
+

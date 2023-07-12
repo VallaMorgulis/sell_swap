@@ -33,6 +33,6 @@ urlpatterns = [
     # path('api/v1/likes/', include('like.urls')),
     # path('api/v1/favorites/', include('favorite.urls')),
     # path('api/v1/orders/', include('order.urls')),
-    # path('api/v1/ratings/', include('rating.urls')),
+    path('api/v1/ratings/', include('rating.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
