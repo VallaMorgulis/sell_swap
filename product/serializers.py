@@ -25,11 +25,12 @@ class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     owner_email = serializers.ReadOnlyField(source='owner.email')
     owner = serializers.ReadOnlyField(source='owner.id')
+    parent = serializers.ReadOnlyField(source='category.parent.slug')
 
     class Meta:
         model = Product
         fields = (
-            'id', 'owner', 'owner_email', 'title', 'description', 'category',
+            'id', 'owner', 'owner_email', 'title', 'description', 'category', 'parent',
             'price', 'quantity', 'created_at', 'updated_at', 'preview', 'images'
         )
 
