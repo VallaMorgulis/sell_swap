@@ -28,12 +28,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = '__all__'
-
-            #(
-            #'id', 'owner', 'owner_email', 'title', 'description', 'category',
-            #'price', 'quantity', 'created_at', 'updated_at', 'preview', 'images'
-       # )
+        fields = (
+            'id', 'owner', 'owner_email', 'title', 'description', 'category',
+            'price', 'quantity', 'created_at', 'updated_at', 'preview', 'images'
+        )
 
     @staticmethod
     def get_stars(instance):
