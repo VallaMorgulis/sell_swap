@@ -44,3 +44,4 @@ class ProductSerializer(serializers.ModelSerializer):
             count += 1
 
         return product
+

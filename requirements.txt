@@ -49,4 +49,5 @@ django-redis
 django-cors-headers
 django-rest-passwordreset
 python-json-logger
-
+scikit-learn
+numpy
