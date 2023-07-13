@@ -35,3 +35,25 @@ class ProductImage(models.Model):
     def save(self, *args, **kwargs):
         self.title = self.generate_name()
         return super(ProductImage, self).save(*args, **kwargs)
+
+
+class Likes(models.Model):
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name='likes')
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE, related_name='likes')
+
+    is_liked = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.product} -> {self.user} -> {self.is_liked}'
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorites')
+    favorite = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.product} -> {self.user} -> {self.favorite}'

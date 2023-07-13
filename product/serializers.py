@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from .models import Product, ProductImage
+from .models import Product, ProductImage, Likes, Favorite
 from category.models import Category
 
 
@@ -10,7 +10,8 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'owner', 'owner_email', 'category_name', 'title', 'price', 'preview')
+        fields = ('id', 'owner', 'owner_email', 'category_name', 'title',
+                  'price', 'preview')
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
