@@ -46,7 +46,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ('retrieve', 'list', 'toggle_like', 'toggle_favorites', 'reviews'):
-            return [permissions.IsAuthenticated(), ]
+            return [permissions.IsAuthenticatedOrReadOnly(), ]
         return [permissions.IsAdminUser(), ]
 
     @action(detail=True, methods=['GET'])
