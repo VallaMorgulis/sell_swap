@@ -14,4 +14,6 @@ class PromoViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
 
     def get_permissions(self):
+        if self.action in ('retrieve', 'list'):
+            return [permissions.AllowAny(), ]
         return [permissions.IsAdminUser(), ]
