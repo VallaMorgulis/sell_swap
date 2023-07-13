@@ -10,7 +10,7 @@ from django.core.mail import send_mail
 
 from .managers import UserManager
 
-HOST = 'localhost:8000'
+HOST = 'localhost:3000'
 
 
 class CustomUser(AbstractUser):
