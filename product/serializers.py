@@ -42,11 +42,21 @@ class ProductSerializer(serializers.ModelSerializer):
         return stars
 
     def to_representation(self, instance):
+        request = self.context.get('request')
         repr = super().to_representation(instance)
         repr['rating'] = instance.reviews.aggregate(Avg('rating'))
         rating = repr['rating']
         rating['ratings_count'] = instance.reviews.count()
         repr['stars'] = self.get_stars(instance)
+        repr['likes_count'] = instance.likes.filter(is_liked=True).count()
+        repr['liked_by_user'] = False
+        repr['favorite_by_user'] = False
+        if request:
+            if request.user.is_authenticated:
+                repr['liked_by_user'] = Likes.objects.filter(user=request.user, product=instance,
+                                                             is_liked=True).exists()
+                repr['favorite_by_user'] = Favorite.objects.filter(user=request.user, favorite=True,
+                                                                   product=instance).exists()
         return repr
 
     def create(self, validated_data):
@@ -62,3 +72,15 @@ class ProductSerializer(serializers.ModelSerializer):
             count += 1
 
         return product
+
+
+class FavoriteListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        repr["author"] = instance.author.email
+        repr["category"] = instance.category.title
+        return repr
