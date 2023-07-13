@@ -22,9 +22,9 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    # images = ProductImageSerializer(many=True, read_only=True)
-    # owner_email = serializers.ReadOnlyField(source='owner.email')
-    # owner = serializers.ReadOnlyField(source='owner.id')
+    images = ProductImageSerializer(many=True, read_only=True)
+    owner_email = serializers.ReadOnlyField(source='owner.email')
+    owner = serializers.ReadOnlyField(source='owner.id')
 
     class Meta:
         model = Product
