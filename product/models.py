@@ -49,6 +49,10 @@ class Likes(models.Model):
     def __str__(self):
         return f'{self.product} -> {self.user} -> {self.is_liked}'
 
+    class Meta:
+        verbose_name = 'like'
+        verbose_name_plural = 'likes'
+
 
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
