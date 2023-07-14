@@ -13,7 +13,7 @@ class CreateOrderView(ListCreateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsAdminUser | IsAuthenticatedOrReadOnly, ]
 
-    @method_decorator(cache_page(60))
+    # @method_decorator(cache_page(60))
     def get(self, request, *args, **kwargs):
         user = request.user
         if user.is_superuser:  # Проверка, является ли пользователь администратором
