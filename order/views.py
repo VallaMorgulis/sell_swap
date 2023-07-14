@@ -9,6 +9,7 @@ from order.serializers import OrderSerializer
 
 
 class CreateOrderView(ListCreateAPIView):
+    queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAdminUser | IsAuthenticatedOrReadOnly, ]
 
