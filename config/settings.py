@@ -207,27 +207,16 @@ SIMPLE_JWT = {
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
 }
 
-# SWAGGER_SETTINGS = {
-#     'SECURITY_DEFINITIONS': {
-#         'Token': {
-#             'type': 'apiKey',
-#             'name': 'Authorization',
-#             'in': 'header',
-#
-#         },
-#     },
-#     'USE_SESSION_AUTH': False,
-# }
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1:6379/0",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient"
-#         }
-#     }
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = '6379'
