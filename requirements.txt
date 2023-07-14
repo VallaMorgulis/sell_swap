@@ -49,5 +49,10 @@ django-redis
 django-cors-headers
 django-rest-passwordreset
 python-json-logger
+
 scikit-learn
 numpy
+
+django-cors-headers
+python-telegram-bot
+

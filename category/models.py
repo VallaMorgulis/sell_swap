@@ -17,10 +17,9 @@ class Category(models.Model):
     #         return self.children.all()
     #     return False
 
-
-class Meta:
-    verbose_name = 'category'
-    verbose_name_plural = 'categories'
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
 
 
 @receiver(pre_save, sender=Category)
@@ -30,13 +29,14 @@ def category_slug_save(sender, instance, *args, **kwargs):
     # print('***************************************')
     if not instance.slug:
         alphabet = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z',
-                    'и': 'i', 'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
+                    'и': 'i', 'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's',
+                    'т': 't',
                     'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ы': 'i', 'э': 'e',
                     'ю': 'yu',
                     'я': 'ya'}
 
         instance.slug = django_slugify(''.join(alphabet.get(w, w) for w in instance.name.lower()))
 
-
         # instance.slug = slugify(instance.name)
+
 

@@ -51,9 +51,9 @@ INSTALLED_APPS = [
     # myApps
     'account',
     'category',
-    # 'order',
+    'order',
     'product',
-    # 'rating',
+    'rating',
 ]
 
 MIDDLEWARE = [
@@ -73,6 +73,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Укажите адрес вашего клиентского приложения JavaScript
+]
 
 TEMPLATES = [
     {
