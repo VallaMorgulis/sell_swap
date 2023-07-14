@@ -22,7 +22,7 @@ class StandartResultPagination(PageNumberPagination):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by('id')
     pagination_class = StandartResultPagination
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('title', 'description')
