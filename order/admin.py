@@ -1,5 +1,13 @@
 from django.contrib import admin
 
-from order.models import Order
+from order.models import Order, OrderItem
 
-admin.site.register(Order)
+
+class OrderItemAdmin(admin.TabularInline):
+    model = OrderItem
+    fields = ('order', 'product', 'quantity')
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderItemAdmin, ]

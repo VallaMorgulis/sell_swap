@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -48,6 +50,10 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action in ('retrieve', 'list', 'toggle_like', 'toggle_favorites', 'reviews'):
             return [permissions.IsAuthenticatedOrReadOnly(), ]
         return [permissions.IsAdminUser(), ]
+
+    @method_decorator(cache_page(60))  # Кеширование на 1 минуту
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     @action(detail=True, methods=['GET'])
     def toggle_like(self, request, pk):
