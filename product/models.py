@@ -2,8 +2,11 @@ from random import randint
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Avg, Count
+
 from category.models import Category
 from ckeditor.fields import RichTextField
+from decimal import Decimal
 
 User = get_user_model()
 

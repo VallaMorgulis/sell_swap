@@ -1,8 +1,24 @@
-from django.db.models import Avg
+from django.db.models import Avg, Q, Count
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+
+from rating.models import Review
 from .models import Product, ProductImage, Likes, Favorite
 from category.models import Category
+
+
+class RecommendedProductSerializer(serializers.ModelSerializer):
+    rating = serializers.FloatField()
+
+    class Meta:
+        model = Product
+        fields = ('id', 'title', 'rating', 'preview')
+
+
+class SimilarProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('id', 'title', 'preview')
 
 
 class ProductListSerializer(serializers.ModelSerializer):
@@ -26,13 +42,43 @@ class ProductSerializer(serializers.ModelSerializer):
     owner_email = serializers.ReadOnlyField(source='owner.email')
     owner = serializers.ReadOnlyField(source='owner.id')
     parent = serializers.ReadOnlyField(source='category.parent.slug')
+    similar_products = serializers.SerializerMethodField()
+    recommended_products = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = (
             'id', 'owner', 'owner_email', 'title', 'description', 'category', 'parent',
-            'price', 'quantity', 'created_at', 'updated_at', 'preview', 'images'
+            'price', 'quantity', 'created_at', 'updated_at', 'preview', 'images',
+            'similar_products', 'recommended_products'
         )
+
+    def get_similar_products(self, obj):
+        similar_products = Product.objects.filter(title__icontains=obj.title.split()[0]).exclude(id=obj.id)[:5]
+        serializer = SimilarProductSerializer(similar_products, many=True)
+        return serializer.data
+
+    @staticmethod
+    def get_avg_r(product):
+        return product.reviews.aggregate(Avg('rating'))['rating__avg']
+
+    def get_recommended_products(self, instance):
+        products = Product.objects.all()
+        ls = []
+        for product in products:
+            avg_rating = self.get_avg_r(product)
+            if avg_rating is not None:
+                data = {
+                    'id': product.id,
+                    'title': product.title,
+                    'rating': avg_rating,
+                    'preview': product.preview,
+                }
+                ls.append(data)
+
+        recommended_products = sorted(ls, key=lambda x: x['rating'], reverse=True)[:5]
+        serializer = RecommendedProductSerializer(recommended_products, many=True)
+        return serializer.data
 
     @staticmethod
     def get_stars(instance):
