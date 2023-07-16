@@ -24,10 +24,11 @@ class SimilarProductSerializer(serializers.ModelSerializer):
 class ProductListSerializer(serializers.ModelSerializer):
     owner_email = serializers.ReadOnlyField(source='owner.email')
     category_name = serializers.ReadOnlyField(source='category.name')
+    parent = serializers.ReadOnlyField(source='category.parent.slug')
 
     class Meta:
         model = Product
-        fields = ('id', 'owner', 'owner_email', 'category_name', 'title',
+        fields = ('id', 'owner', 'owner_email', 'category_name', 'parent', 'title',
                   'price', 'preview')
 
 
