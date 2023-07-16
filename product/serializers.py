@@ -121,13 +121,27 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
 
 
-class FavoriteListSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='category.name')
+
     class Meta:
-        model = Product
-        fields = '__all__'
+        model = Category
+        fields = ('pk', 'name')
+
+
+class FavoriteListSerializer(serializers.ModelSerializer):
+    title = serializers.ReadOnlyField(source='product.title')
+    author = serializers.ReadOnlyField(source='product.author.email')
+    category = CategorySerializer(source='product.category')
+    photo = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Favorite
+        fields = ('category', 'id', 'title', 'author', 'photo')
 
     def to_representation(self, instance):
         repr = super().to_representation(instance)
-        repr["author"] = instance.author.email
-        repr["category"] = instance.category.title
         return repr
+
+    def get_photo(self, instance):
+        return instance.product.preview.url if instance.product.preview else None
