@@ -11,5 +11,9 @@ class Promo(models.Model):
     text = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = 'promo'
+        verbose_name_plural = 'promo'
+
     def __str__(self):
         return f'{self.user} - {self.text[:25]}'

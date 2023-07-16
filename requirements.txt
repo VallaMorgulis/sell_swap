@@ -50,4 +50,6 @@ django-rest-passwordreset
 python-json-logger
 django-cors-headers
 python-telegram-bot
-
+bs4
+django-extensions
+lxml

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 from decouple import config
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
 
     # installed Apps
     'rest_framework',
@@ -57,6 +59,7 @@ INSTALLED_APPS = [
     'rating',
     'promo',
     'tracking',
+    'news',
 ]
 
 MIDDLEWARE = [
@@ -280,6 +283,8 @@ LOGGING = {
     },
 }
 
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# sys.path.insert(0, os.path.join(BASE_DIR, 'sell_swap', 'management'))
 
 # redis-cli - команда для запуска Radis
 # redis-server
