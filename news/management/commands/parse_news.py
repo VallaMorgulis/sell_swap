@@ -51,27 +51,27 @@ def make_all(link):
         pass
 
 
-# def main():
-#     url = get_html('https://www.sport-express.ru/news/')
-#     soup = get_soup(url)
-#     links = get_list_links(soup)
-#     with Pool(40) as pool:
-#         pool.map(make_all, links)
+def main():
+    url = get_html('https://www.sport-express.ru/news/')
+    soup = get_soup(url)
+    links = get_list_links(soup)
+    with Pool(40) as pool:
+        pool.map(make_all, links)
+
+
+if __name__ == '__main__':
+    main()
+
+
+# class Command(BaseCommand):
+#     help = 'Parsing News'
 #
-#
-# if __name__ == '__main__':
-#     main()
-
-
-class Command(BaseCommand):
-    help = 'Parsing News'
-
-    def handle(self, *args, **options):
-        url = get_html('https://www.sport-express.ru/news/')
-        soup = get_soup(url)
-        links = get_list_links(soup)
-        with Pool(40) as pool:
-            pool.map(make_all, links)
+#     def handle(self, *args, **options):
+#         url = get_html('https://www.sport-express.ru/news/')
+#         soup = get_soup(url)
+#         links = get_list_links(soup)
+#         with Pool(40) as pool:
+#             pool.map(make_all, links)
 
 # запуск парсинга
 # python manage.py parse_news
