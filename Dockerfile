@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD python parse_news
+#CMD python manage.py parse_news
