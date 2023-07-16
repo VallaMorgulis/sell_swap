@@ -1,15 +1,15 @@
-# Ваш файл views.py
-
 from django.db import IntegrityError
 from bs4 import BeautifulSoup as bs
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import permissions
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
 from requests import get
 # from datetime import datetime
-# from multiprocessing import Pool
+from multiprocessing import Pool
 
 from . import serializers
 from .models import News
@@ -33,11 +33,14 @@ class NewsViewSet(ModelViewSet):
         return [permissions.IsAdminUser(), ]
 
     # Декоратор cache_page для кеширования результатов на 15 минут
-    @method_decorator(cache_page(60 * 15))
+    @method_decorator(cache_page(60))
     def list(self, request, *args, **kwargs):
-        # Вызываем функцию для парсинга новостей
-        self.parse_news_data()
         return super().list(request, *args, **kwargs)
+
+    @action(detail=False, methods=['GET'])
+    def parse_news(self, request, *args, **kwargs):
+        self.parse_news_data()
+        return Response('Parse done')
 
     # Функция для парсинга новостей и сохранения в базу данных
     def parse_news_data(self):
@@ -98,3 +101,4 @@ class NewsViewSet(ModelViewSet):
         text = container.find('div', class_='se-material-page__content').find_all('p')
         data = {'title': title, 'image': image, 'text': text}
         return data
+

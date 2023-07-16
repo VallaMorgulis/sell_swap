@@ -13,11 +13,12 @@ import os
 import sys
 from datetime import timedelta
 from pathlib import Path
+
+from celery.schedules import crontab
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -97,7 +98,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -111,7 +111,6 @@ DATABASES = {
         'PORT': config('DB_PORT', cast=int),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -131,7 +130,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -142,7 +140,6 @@ TIME_ZONE = 'Asia/Bishkek'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -209,7 +206,6 @@ SIMPLE_JWT = {
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
 }
 
-
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
@@ -231,6 +227,14 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+# CELERY_BEAT_SCHEDULE = {
+#     'parse_news_task': {
+#         'task': 'news.tasks.parse_news',
+#         'schedule': crontab(minute='*/2'),  # Запуск каждые 2 часа
+#     },
+# }
 
 # -----> LOGGING
 ENABLE_DECORATOR_LOGGING = os.getenv('ENABLE_DECORATOR_LOGGING', True)
@@ -289,25 +293,21 @@ LOGGING = {
 # redis-server
 # celery -A config worker -l INFO - запуск Celery
 
-   #  1  git clone https://<репозиторий>
-   #  2  cd <dir project>
-   #  3  nano .env
-   #  4  sudo apt-get update
-   #  5  sudo apt install docker.io
-   #  6  sudo apt install docker-compose
-   #  7  sudo service docker start
-   #  8  sudo docker-compose up -d --build
-   #  9  sudo docker-compose start
-   # 10  sudo docker-compose up -d
-   # 11  sudo docker-compose exec web bash
-   # После 11 команды попадаем в контейнер Docker
-   # 12 python3 manage.py collectstatic
-   # 13 python3 manage.py createsuperuser
-
-
+#  1  git clone https://<репозиторий>
+#  2  cd <dir project>
+#  3  nano .env
+#  4  sudo apt-get update
+#  5  sudo apt install docker.io
+#  6  sudo apt install docker-compose
+#  7  sudo service docker start
+#  8  sudo docker-compose up -d --build
+#  9  sudo docker-compose start
+# 10  sudo docker-compose up -d
+# 11  sudo docker-compose exec web bash
+# После 11 команды попадаем в контейнер Docker
+# 12 python3 manage.py collectstatic
+# 13 python3 manage.py createsuperuser
 
 
 # sudo docker-compose up -d --build
 # sudo docker-compose exec web bash
-
-
