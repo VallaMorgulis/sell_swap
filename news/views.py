@@ -8,7 +8,7 @@ from rest_framework import permissions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from requests import get
-from datetime import datetime
+# from datetime import datetime
 # from multiprocessing import Pool
 
 from . import serializers
@@ -47,7 +47,6 @@ class NewsViewSet(ModelViewSet):
         links = self.get_list_links(soup)
         for link in links:
             self.make_all(link)
-
         # with Pool(40) as pool:
         #     pool.map(self.make_all, links)
 
@@ -68,9 +67,12 @@ class NewsViewSet(ModelViewSet):
         container = soup.find('div', class_='se-news-list-page__items')
         all_news = container.find_all('div', class_='se-news-list-page__item')
         res = []
+        count = 0
         for news in all_news:
-            link = news.find('div', class_='se-material__title se-material__title--size-middle').find('a').get('href')
-            res.append(link)
+            if count < 10:
+                link = news.find('div', class_='se-material__title se-material__title--size-middle').find('a').get('href')
+                res.append(link)
+            count += 1
         return res
 
     # Функция для обработки данных каждой новости
