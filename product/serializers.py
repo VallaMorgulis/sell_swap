@@ -136,16 +136,17 @@ class FavoriteListSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='product.owner.email')
     category = CategorySerializer(source='product.category')
     price = serializers.ReadOnlyField(source='product.price')
-    photo = serializers.SerializerMethodField()
+    photo = serializers.ReadOnlyField(source='product.preview.url')
+    # photo = serializers.SerializerMethodField()
 
     class Meta:
         model = Favorite
         fields = ('category', 'id', 'owner', 'title', 'price', 'photo')
 
-    def to_representation(self, instance):
-        repr = super().to_representation(instance)
-        repr['photo'] = f'{config("HOST")}{self.get_photo(instance)}'
-        return repr
+    # def to_representation(self, instance):
+    #     repr = super().to_representation(instance)
+    #     repr['photo'] = f'{config("HOST")}{self.get_photo(instance)}'
+    #     return repr
 
-    def get_photo(self, instance):
-        return instance.product.preview.url if instance.product.preview else None
+    # def get_photo(self, instance):
+    #     return instance.product.preview.url if instance.product.preview else None
