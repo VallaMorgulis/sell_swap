@@ -15,5 +15,3 @@ RUN mkdir static && mkdir media && mkdir logs
 COPY . .
 
 EXPOSE 8000
-
-#CMD python manage.py parse_news
