@@ -1,6 +1,7 @@
 from django.db.models import Avg, Q, Count
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+from decouple import config
 
 from rating.models import Review
 from .models import Product, ProductImage, Likes, Favorite
@@ -132,16 +133,18 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class FavoriteListSerializer(serializers.ModelSerializer):
     title = serializers.ReadOnlyField(source='product.title')
-    author = serializers.ReadOnlyField(source='product.author.email')
+    owner = serializers.ReadOnlyField(source='product.owner.email')
     category = CategorySerializer(source='product.category')
+    price = serializers.ReadOnlyField(source='product.price')
     photo = serializers.SerializerMethodField()
 
     class Meta:
         model = Favorite
-        fields = ('category', 'id', 'title', 'author', 'photo')
+        fields = ('category', 'id', 'owner', 'title', 'price', 'photo')
 
     def to_representation(self, instance):
         repr = super().to_representation(instance)
+        repr['photo'] = f'{config("HOST")}{self.get_photo(instance)}'
         return repr
 
     def get_photo(self, instance):
