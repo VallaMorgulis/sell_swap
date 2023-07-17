@@ -143,10 +143,14 @@ class FavoriteListSerializer(serializers.ModelSerializer):
         model = Favorite
         fields = ('category', 'id', 'owner', 'title', 'price', 'photo')
 
-    # def to_representation(self, instance):
-    #     repr = super().to_representation(instance)
-    #     repr['photo'] = f'{config("HOST")}{self.get_photo(instance)}'
-    #     return repr
+    # def get_photo(self, obj):
+    #     return self.context['request'].build_absolute_uri(obj.product.preview.url)
 
-    # def get_photo(self, instance):
-    #     return instance.product.preview.url if instance.product.preview else None
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        # repr['photo'] = self.instance.preview.url
+        repr['photo'] = f'{config("HOST")}{self.get_photo(instance)}'
+        return repr
+
+    def get_photo(self, instance):
+        return instance.product.preview.url if instance.product.preview else None
