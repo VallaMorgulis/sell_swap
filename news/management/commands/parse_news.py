@@ -55,12 +55,14 @@ def main():
     url = get_html('https://www.sport-express.ru/news/')
     soup = get_soup(url)
     links = get_list_links(soup)
-    with Pool(40) as pool:
-        pool.map(make_all, links)
+    for link in links:
+        make_all(link)
+    # with Pool(40) as pool:
+    #     pool.map(make_all, links)
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 
 
 # class Command(BaseCommand):
