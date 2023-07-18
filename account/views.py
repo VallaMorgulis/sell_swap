@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 from django.urls import path
 from django.views.decorators.cache import cache_page
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, SAFE_METHODS
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import ListModelMixin, UpdateModelMixin
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework import generics
 from rest_framework.response import Response
@@ -12,23 +12,27 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 
+from product.permissions import IsAuthor
 from product.serializers import FavoriteListSerializer
 from .serializers import ChangePasswordSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from account import serializers
 from account.send_mail import send_confirmation_email
+
 # from favorite.serializers import FavoriteUserSerializer
 
 User = get_user_model()
 
 
-class UserViewSet(ListModelMixin, GenericViewSet):
+class UserViewSet(ListModelMixin, UpdateModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
-    permission_classes = (AllowAny,)
 
-
+    def get_permissions(self):
+        if self.action in ('update', 'partial_update'):  # PUT и PATCH
+            return (IsAuthor(), )
+        return (AllowAny(),)
 
     @action(['POST'], detail=False)
     def register(self, request, *args, **kwargs):
