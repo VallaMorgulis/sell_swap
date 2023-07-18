@@ -62,7 +62,7 @@ class UserViewSet(ListModelMixin, UpdateModelMixin, GenericViewSet):
     @action(['GET'], detail=True)
     def favorites(self, request, pk):
         product = self.get_object()
-        favorites = product.favorites.all()
+        favorites = product.favorites.filter(favorite=True)
         serializer = FavoriteListSerializer(instance=favorites, many=True)
         return Response(serializer.data, status=200)
 
