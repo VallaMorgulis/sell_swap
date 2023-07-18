@@ -6,7 +6,7 @@ from django.db.models import Count, Avg
 
 from category.models import Category
 from ckeditor.fields import RichTextField
-from decimal import Decimal
+
 
 User = get_user_model()
 
@@ -23,15 +23,6 @@ class Product(models.Model):
     preview = models.ImageField(upload_to='images/', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=Decimal('0.0'))
-
-    def __str__(self):
-        return self.title
-
-    def update_rating(self):
-        aggregate = self.reviews.aggregate(avg_rating=Avg('rating'), count=Count('rating'))
-        self.rating = Decimal(aggregate['avg_rating'] or 0.0)
-        self.save()
 
 
 class ProductImage(models.Model):

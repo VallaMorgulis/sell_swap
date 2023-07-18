@@ -1,28 +1,38 @@
-from django.db.models import Avg, Count
+from django.db.models import Avg, Q, Count
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+
+from rating.models import Review
 from .models import Product, ProductImage, Likes, Favorite
+from category.models import Category
 
 
 class RecommendedProductSerializer(serializers.ModelSerializer):
     class Meta:
+        model = Review
+        fields = ('id',)
+
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        repr['title'] = instance[0].title
+        repr['rating'] = instance[1]
+        return repr
+
+
+class SimilarProductSerializer(serializers.ModelSerializer):
+    class Meta:
         model = Product
-        fields = ('id', 'title', 'price', 'preview')
+        fields = ('id', 'title', 'preview')
 
 
 class ProductListSerializer(serializers.ModelSerializer):
     owner_email = serializers.ReadOnlyField(source='owner.email')
     category_name = serializers.ReadOnlyField(source='category.name')
-    recommended_products = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = ('id', 'owner', 'owner_email', 'category_name', 'title',
-                  'price', 'preview', 'recommended_products')
-
-    def get_recommended_products(self, instance):
-        recommended_products = Product.objects.order_by('-rating').exclude(id=instance.id)[:5]
-        serializer = RecommendedProductSerializer(recommended_products, many=True)
-        return serializer.data
+                  'price', 'preview')
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -35,17 +45,32 @@ class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     owner_email = serializers.ReadOnlyField(source='owner.email')
     owner = serializers.ReadOnlyField(source='owner.id')
+    parent = serializers.ReadOnlyField(source='category.parent.slug')
+    similar_products = serializers.SerializerMethodField()
     recommended_products = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = (
-            'id', 'owner', 'owner_email', 'title', 'description', 'category',
-            'price', 'quantity', 'created_at', 'updated_at', 'preview', 'images', 'recommended_products'
+            'id', 'owner', 'owner_email', 'title', 'description', 'category', 'parent',
+            'price', 'quantity', 'created_at', 'updated_at', 'preview', 'images',
+            'similar_products', 'recommended_products'
         )
 
+    def get_similar_products(self, obj):
+        similar_products = Product.objects.filter(title__icontains=obj.title.split()[0]).exclude(id=obj.id)[:5]
+        serializer = SimilarProductSerializer(similar_products, many=True)
+        return serializer.data
+
+    @staticmethod
+    def get_avg_r(product):
+        return product.reviews.aggregate(Avg('rating'))['rating__avg']
+
     def get_recommended_products(self, instance):
-        recommended_products = Product.objects.order_by('-rating').exclude(id=instance.id)[:5]
+        products = Product.objects.all()
+        ls = [(x, self.get_avg_r(x)) for x in products if self.get_avg_r(x) != None]
+        recommended_products = sorted_ls = sorted(ls, key=lambda x: x[1] if x[1] is not None else float('inf'),
+                                                  reverse=True)[:5]
         serializer = RecommendedProductSerializer(recommended_products, many=True)
         return serializer.data
 
@@ -60,11 +85,9 @@ class ProductSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
         repr = super().to_representation(instance)
-        rating = instance.reviews.aggregate(Avg('rating'), Count('rating'))
-        repr['rating'] = {
-            'average': rating['rating__avg'] or 0.0,
-            'ratings_count': rating['rating__count']
-        }
+        repr['rating'] = instance.reviews.aggregate(Avg('rating'))
+        rating = repr['rating']
+        rating['ratings_count'] = instance.reviews.count()
         repr['stars'] = self.get_stars(instance)
         repr['likes_count'] = instance.likes.filter(is_liked=True).count()
         repr['liked_by_user'] = False
@@ -92,13 +115,28 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
 
 
-class FavoriteListSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='category.name')
+
     class Meta:
-        model = Product
-        fields = '__all__'
+        model = Category
+        fields = ('pk', 'name')
+
+
+class FavoriteListSerializer(serializers.ModelSerializer):
+    title = serializers.ReadOnlyField(source='product.title')
+    author = serializers.ReadOnlyField(source='product.author.email')
+    price = serializers.ReadOnlyField(source='product.price')
+    category = CategorySerializer(source='product.category')
+    photo = serializers.ReadOnlyField(source='product.preview.url')
+
+    class Meta:
+        model = Favorite
+        fields = ('category', 'id', 'title', 'author', 'photo')
 
     def to_representation(self, instance):
         repr = super().to_representation(instance)
-        repr["author"] = instance.author.email
-        repr["category"] = instance.category.title
         return repr
+
+    def get_photo(self, instance):
+        return instance.product.preview.url if instance.product.preview else None

@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from rating.serializers import ReviewActionSerializer
 from . import serializers
 from .models import Product, ProductImage, Likes, Favorite
-from .permissions import IsAuthorOrAdmin, IsAuthor
 from .serializers import ProductSerializer
 
 
