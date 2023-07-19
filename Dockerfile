@@ -13,5 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir static && mkdir media && mkdir logs
 
 COPY . .
+#COPY telegram_bot.py /code/
 
 EXPOSE 8000
