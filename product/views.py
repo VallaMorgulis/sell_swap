@@ -47,8 +47,10 @@ class ProductViewSet(viewsets.ModelViewSet):
         return serializers.ProductSerializer
 
     def get_permissions(self):
-        if self.action in ('retrieve', 'list', 'toggle_like', 'toggle_favorites', 'reviews'):
+        if self.action in ('retrieve', 'toggle_like', 'toggle_favorites', 'reviews'):
             return [permissions.IsAuthenticatedOrReadOnly(), ]
+        elif self.action == 'list':
+            return [permissions.AllowAny(), ]
         return [permissions.IsAdminUser(), ]
 
     @method_decorator(cache_page(60))  # Кеширование на 1 минуту
