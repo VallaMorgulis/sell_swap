@@ -42,6 +42,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+# class UserUpdateSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         exclude = '__all__'
+
+
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
 

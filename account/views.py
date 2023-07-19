@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from account import serializers
 from account.send_mail import send_confirmation_email
+
 # from favorite.serializers import FavoriteUserSerializer
 
 User = get_user_model()
@@ -28,7 +29,6 @@ class UserViewSet(ListModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = (AllowAny,)
-
 
     @action(['POST'], detail=False)
     def register(self, request, *args, **kwargs):
@@ -61,6 +61,12 @@ class UserViewSet(ListModelMixin, GenericViewSet):
         favorites = product.favorites.filter(favorite=True)
         serializer = FavoriteListSerializer(instance=favorites, many=True)
         return Response(serializer.data, status=200)
+
+
+# class UserUpdateViewSet(UpdateModelMixin, GenericViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = serializers.UserUpdateSerializer
+#     permission_classes = (IsAuthor,)
 
 
 class LoginView(TokenObtainPairView):

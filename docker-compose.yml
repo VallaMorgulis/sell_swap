@@ -37,6 +37,9 @@ services:
     depends_on:
       - db
 
+  bot:
+    build: .
+    command: python3 telegram_bot.py
 
   redis:
     image: redis
