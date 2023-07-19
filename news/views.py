@@ -1,5 +1,3 @@
-from django.db import IntegrityError
-from bs4 import BeautifulSoup as bs
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import permissions
@@ -7,9 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from requests import get
-# from datetime import datetime
-from multiprocessing import Pool
+
 
 from . import serializers
 from .models import News
