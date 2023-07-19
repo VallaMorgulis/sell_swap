@@ -73,4 +73,4 @@ def get_soup(html: str) -> bs:
     return bs(html, 'lxml')
 
 
-# bot.polling()
+bot.polling()
