@@ -53,7 +53,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             return [permissions.AllowAny(), ]
         return [permissions.IsAdminUser(), ]
 
-    @method_decorator(cache_page(60))  # Кеширование на 1 минуту
+    # @method_decorator(cache_page(60))  # Кеширование на 1 минуту
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
