@@ -42,10 +42,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-# class UserUpdateSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         exclude = '__all__'
+class UserUpdateSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
+    email = serializers.CharField(required=False)
+    is_active = serializers.CharField(required=False)
+
+    class Meta:
+        model = User
+        exclude = ('password', )
 
 
 class ChangePasswordSerializer(serializers.Serializer):

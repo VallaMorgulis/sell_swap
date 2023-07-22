@@ -12,9 +12,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 
+from .permissions import IsAuthorOrAdmin
 from product.permissions import IsAuthor
 from product.serializers import FavoriteListSerializer
-from .serializers import ChangePasswordSerializer
+from .serializers import ChangePasswordSerializer, UserUpdateSerializer
 from rest_framework.permissions import IsAuthenticated
 
 from account import serializers
@@ -63,10 +64,10 @@ class UserViewSet(ListModelMixin, GenericViewSet):
         return Response(serializer.data, status=200)
 
 
-# class UserUpdateViewSet(UpdateModelMixin, GenericViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = serializers.UserUpdateSerializer
-#     permission_classes = (IsAuthor,)
+class UserUpdateViewSet(UpdateModelMixin, GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserUpdateSerializer
+    permission_classes = (IsAuthorOrAdmin, )
 
 
 class LoginView(TokenObtainPairView):
